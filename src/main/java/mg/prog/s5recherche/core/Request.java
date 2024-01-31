@@ -53,6 +53,11 @@ public class Request {
         }
         for (Criteria criterion : criteria) {
             for (int index : getIndexes(criterion.getName())) {
+                Criteria existing = this.getCriteria().get(index);
+                int getNearIndex = Utils.getNearIndex(index, this.getCriteria());
+                Criteria near = this.getCriteria().get(getNearIndex);
+                if(existing != null || (near != null && index < getNearIndex + near.getName().length()))
+                    continue;
                 this.getCriteria().put(index, criterion);
             }
         }
@@ -77,7 +82,7 @@ public class Request {
                     .append(category.getName()).append("</span>");
         }
         for (Product product : getProducts().values()) {
-            sqlQuery.append("product.id = ").append(product.getId()).append(" OR ");
+            sqlQuery.append("p.id = ").append(product.getId()).append(" OR ");
 
             getClearQuery().append("<span class='badge rounded-pill bg-primary mx-1'>")
                     .append(product.getName()).append("</span>");
@@ -89,6 +94,13 @@ public class Request {
 
     public String criteriaToSql() {
         StringBuilder sqlQuery = new StringBuilder();
+
+        if(getCriteria().size() != 1) {
+            Adjective adjective = Utils.getNearIn(getCriteria().keySet().stream().findFirst().get(), getAdjectives());
+            sqlQuery.append(Utils.getSign(adjective, getCriteria().get(getCriteria().firstKey())))
+                    .append("(");
+        }
+
         boolean first = true;
         List<Criteria> alreadyPresent = new ArrayList<>();
         for (Integer index : getCriteria().keySet()) {
@@ -112,6 +124,8 @@ public class Request {
         }
         // remove last comma
         sqlQuery.delete(sqlQuery.length() - 3, sqlQuery.length());
+        if (getCriteria().size() != 1)
+            sqlQuery.append(") ");
         return sqlQuery.toString();
     }
 
@@ -153,14 +167,14 @@ public class Request {
     }
 
     public void generateSqlQuery() {
-        String priority = "id";
+        String priority = "p.id";
         if (!getCriteria().isEmpty()) {
             priority = criteriaToSql();
         }
         StringBuilder sqlQuery = new StringBuilder("SELECT *, c.name AS category_name, ")
                 .append(priority)
-                .append(" as priority FROM product")
-                .append(" JOIN category c ON c.id = product.category_id");
+                .append(" as priority FROM product p")
+                .append(" JOIN category c ON c.id = p.category_id");
 
         if (!getCategories().isEmpty() || !getProducts().isEmpty()) {
             sqlQuery.append(" WHERE (").append(categoryToSqlQuery()).append(")");
@@ -170,7 +184,7 @@ public class Request {
             sqlQuery.append(getCategories().isEmpty() ? " WHERE " : " AND ").append(comparatorToSql());
         }
 
-        setSqlQuery(sqlQuery.append(" ORDER BY priority").toString());
+        setSqlQuery(sqlQuery.append(" ORDER BY priority DESC").toString());
     }
 
     public List<Product> getResults(Connection connection) {

@@ -19,10 +19,24 @@ public class Utils {
         return near;
     }
 
+    public static int getNearIndex(int index, TreeMap<Integer, ?> map) {
+        int near = -Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (Integer i : map.keySet()) {
+            if (Math.abs(index - i) < min) {
+                min = Math.abs(index - i);
+                near = i;
+            }
+        }
+        return near;
+    }
+
     public static String getSign(Adjective adjective, Criteria criterion) {
         String sign = adjective.getEffect();
-        if(criterion.getBestValue().equals("+"))
-            sign = adjective.getEffect().equals("-") ? "+" : "-";
+        if(sign.equals("-") && criterion.getBestValue().equals("-")) return "-";
+        if(sign.equals("+") && criterion.getBestValue().equals("-")) return "+";
+        if(sign.equals("-") && criterion.getBestValue().equals("+")) return "-";
+        if(sign.equals("+") && criterion.getBestValue().equals("+")) return "+";
         return sign;
     }
 

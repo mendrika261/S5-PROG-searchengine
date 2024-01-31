@@ -48,8 +48,7 @@ public class SearchController {
                 Connection connection = dataSource.getConnection();
                 modelAndView.addObject("results", request.getResults(connection));
                 modelAndView.addObject("query", query);
-                modelAndView.addObject("resultFor", request.getClearQuery()
-                        .substring(0, request.getClearQuery().length() - 2));
+                modelAndView.addObject("resultFor", request.getClearQuery());
                 connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
