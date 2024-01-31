@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Recherche de produit</title>
+    <link rel="stylesheet" href="/datatables.min.css">
+    <link rel="stylesheet" href="/mdb/css/mdb.min.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+    <script src="/datatables.min.js"></script>
+    <script src="/mdb/js/mdb.umd.min.js"></script>
+    <script src="/fontawesome/js/all.min.js"></script>
+    <style>
+        .ms-n5 {
+            margin-left: -40px;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-5">
+                <div class="card-body">
+                    <form class="input-group">
+                        <input class="form-control border-end-0 border" type="search" th:value="${query}"
+                            name="query">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                    type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+
+            <div th:if="${results}" class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h5>Résultat(s) pour: <span th:utext="${resultFor}"></span></h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered" id="table">
+                        <thead>
+                            <tr>
+                                <th>Catégorie</th>
+                                <th>Nom</th>
+                                <th>Prix</th>
+                                <th>Qualité</th>
+                                <th>Qualité/prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="product: ${results}">
+                                <td th:text="${product.getCategory().getName()}"></td>
+                                <td th:text="${product.getName()}"></td>
+                                <td th:text="${product.getPrice()}"></td>
+                                <td th:text="${product.getQuality()}"></td>
+                                <td th:text="${product.getQualityPrice()}"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Qualité</th>
+                            <th>Qualité/prix</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#table').DataTable(
+                {
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/fr.json"
+                    },
+                    sort: false,
+                    searching: false,
+                    pageLength: 6,
+                    lengthMenu: [6, 12, 18, 24],
+                }
+            );
+        });
+    </script>
+</body>
+</html>
