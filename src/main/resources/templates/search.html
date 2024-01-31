@@ -55,7 +55,10 @@
                         </thead>
                         <tbody>
                             <tr th:each="product: ${results}">
-                                <td th:text="${product.getCategory().getName()}"></td>
+                                <td>
+                                    <span class="badge bg-light text-dark" th:text="${product.getCategory().getName()}">
+                                    </span>
+                                </td>
                                 <td th:text="${product.getName()}"></td>
                                 <td th:text="${product.getPrice()}"></td>
                                 <td th:text="${product.getQuality()}"></td>
@@ -81,7 +84,7 @@
             $('#table').DataTable(
                 {
                     "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/fr.json"
+                        "url": "https://cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json"
                     },
                     sort: false,
                     searching: false,

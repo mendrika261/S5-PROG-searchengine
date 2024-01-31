@@ -76,6 +76,13 @@ public class Request {
             getClearQuery().append("<span class='badge rounded-pill bg-info mx-1'>")
                     .append(category.getName()).append("</span>");
         }
+        for (Product product : getProducts().values()) {
+            sqlQuery.append("product.id = ").append(product.getId()).append(" OR ");
+
+            getClearQuery().append("<span class='badge rounded-pill bg-primary mx-1'>")
+                    .append(product.getName()).append("</span>");
+        }
+
         sqlQuery.delete(sqlQuery.length() - 4, sqlQuery.length());
         return sqlQuery.toString();
     }
@@ -99,7 +106,7 @@ public class Request {
             first = false;
             alreadyPresent.add(criterion);
 
-            getClearQuery().append("<span class='badge rounded-pill bg-primary mx-1'>")
+            getClearQuery().append("<span class='badge rounded-pill bg-success mx-1'>")
                     .append(adjective.getName()).append(" ").append(criterion.getName())
                     .append("</span>");
         }
@@ -131,10 +138,10 @@ public class Request {
             if(comparator.getValue().equals("=")) orParanthesis = true;
 
             sqlQuery.append(" ")
-                    .append(Utils.getNextOperator(getQuery(), index + comparator.getName().length()))
+                    .append(Utils.getNextOperator(getQuery(), index + value.length()))
                     .append(" ");
 
-            getClearQuery().append("<span class='badge rounded-pill bg-success mx-1'>")
+            getClearQuery().append("<span class='badge rounded-pill bg-secondary mx-1'>")
                     .append(criterion.getName()).append(" ")
                     .append(comparator.getName()).append(" ")
                     .append(value.replace("AND", "et")).append("</span>");
@@ -155,7 +162,7 @@ public class Request {
                 .append(" as priority FROM product")
                 .append(" JOIN category c ON c.id = product.category_id");
 
-        if (!getCategories().isEmpty()) {
+        if (!getCategories().isEmpty() || !getProducts().isEmpty()) {
             sqlQuery.append(" WHERE (").append(categoryToSqlQuery()).append(")");
         }
 
