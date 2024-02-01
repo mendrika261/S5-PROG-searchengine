@@ -67,7 +67,7 @@ public class Product {
     public Double getQualityPrice() {
         if (quality == null || price == null || quality == 0 || price == 0)
             return 0.0;
-        return Utils.round2(price / quality);
+        return Utils.round2(quality / price);
     }
 
     @Override

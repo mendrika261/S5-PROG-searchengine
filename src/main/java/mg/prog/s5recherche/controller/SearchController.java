@@ -20,14 +20,16 @@ public class SearchController {
     private final ProductRepository productRepository;
     private final DataSource dataSource;
     private final ComparatorRepository comparatorRepository;
+    private final CardinalRepository cardinalRepository;
 
-    public SearchController(AdjectiveRepository adjectiveRepository, CategoryRepository categoryRepository, CriteriaRepository criteriaRepository, ProductRepository productRepository, DataSource dataSource, ComparatorRepository comparatorRepository) {
+    public SearchController(AdjectiveRepository adjectiveRepository, CategoryRepository categoryRepository, CriteriaRepository criteriaRepository, ProductRepository productRepository, DataSource dataSource, ComparatorRepository comparatorRepository, CardinalRepository cardinalRepository) {
         this.adjectiveRepository = adjectiveRepository;
         this.categoryRepository = categoryRepository;
         this.criteriaRepository = criteriaRepository;
         this.productRepository = productRepository;
         this.dataSource = dataSource;
         this.comparatorRepository = comparatorRepository;
+        this.cardinalRepository = cardinalRepository;
     }
 
     @GetMapping("/search")
@@ -41,8 +43,9 @@ public class SearchController {
                 List<Criteria> criteria = criteriaRepository.getList();
                 List<Product> products = productRepository.findAll();
                 List<Comparator> comparators = comparatorRepository.findAll();
+                List<Cardinal> cardinals = cardinalRepository.findAll();
 
-                Request request = new Request(query, adjectives, categories, criteria, products, comparators);
+                Request request = new Request(query, adjectives, categories, criteria, products, comparators, cardinals);
                 System.out.println(request);
 
                 Connection connection = dataSource.getConnection();

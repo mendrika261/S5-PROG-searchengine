@@ -38,21 +38,7 @@ public class S5RechercheApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // String query = "le fruit le plus chère"
-        String query = "le meilleur rapport qualité prix de la catégorie fruit avec prix entre 2000 et 5000";
 
-        List<Adjective> adjectives = adjectiveRepository.findAll();
-        List<Category> categories = categoryRepository.findAll();
-        List<Criteria> criteria = criteriaRepository.getList();
-        List<Product> products = productRepository.findAll();
-        List<Comparator> comparators = comparatorRepository.findAll();
-
-        Request request = new Request(query, adjectives, categories, criteria, products, comparators);
-
-        Connection connection = dataSource.getConnection();
-        System.out.println(request.getResults(connection));
-        connection.close();
-
-        System.out.println(request);
     }
 }
 

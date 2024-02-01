@@ -3,7 +3,6 @@ package mg.prog.s5recherche.core;
 import mg.prog.s5recherche.entity.Adjective;
 import mg.prog.s5recherche.entity.Criteria;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class Utils {
@@ -90,7 +89,7 @@ public class Utils {
     }
 
     public static double round2(double value) {
-        return Math.round(value * 100.0) / 100.0;
+        return Math.round(value * 1000000.0) / 1000000.0;
     }
 
     public static String getNextOperator(String query, int index) {

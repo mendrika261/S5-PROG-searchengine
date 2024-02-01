@@ -1,10 +1,7 @@
 package mg.prog.s5recherche.core;
 
 import lombok.Data;
-import mg.prog.s5recherche.entity.Adjective;
-import mg.prog.s5recherche.entity.Category;
-import mg.prog.s5recherche.entity.Criteria;
-import mg.prog.s5recherche.entity.Product;
+import mg.prog.s5recherche.entity.*;
 import mg.prog.s5recherche.entity.Comparator;
 
 import java.sql.Connection;
@@ -19,13 +16,15 @@ public class Request {
     private TreeMap<Integer, Criteria> criteria = new TreeMap<>();
     private TreeMap<Integer, Product> products = new TreeMap<>();
     private TreeMap<Integer, Comparator> comparators = new TreeMap<>();
+    private TreeMap<Integer, Cardinal> cardinals = new TreeMap<>();
     private String sqlQuery;
 
 
     public Request(String query, List<Adjective> adjectives, List<Category> categories,
-                   List<Criteria> criteria, List<Product> products, List<Comparator> comparators) {
+                   List<Criteria> criteria, List<Product> products, List<Comparator> comparators,
+                   List<Cardinal> cardinals) {
         setQuery(query);
-        generateQueryLabel(adjectives, categories, criteria, products, comparators);
+        generateQueryLabel(adjectives, categories, criteria, products, comparators, cardinals);
         generateSqlQuery();
     }
 
@@ -40,7 +39,8 @@ public class Request {
     }
 
     public void generateQueryLabel(List<Adjective> adjectives, List<Category> categories,
-                                   List<Criteria> criteria, List<Product> products, List<Comparator> comparators) {
+                                   List<Criteria> criteria, List<Product> products, List<Comparator> comparators,
+                                   List<Cardinal> cardinals) {
         for (Adjective adjective : adjectives) {
             for (int index : getIndexes(adjective.getName())) {
                 this.getAdjectives().put(index, adjective);
@@ -69,6 +69,11 @@ public class Request {
         for (Comparator comparator : comparators) {
             for (int index : getIndexes(comparator.getName())) {
                 this.getComparators().put(index, comparator);
+            }
+        }
+        for (Cardinal cardinal : cardinals) {
+            for (int index : getIndexes(cardinal.getName())) {
+                this.getCardinals().put(index, cardinal);
             }
         }
     }
@@ -166,6 +171,15 @@ public class Request {
         return sqlQuery.toString();
     }
 
+    public String cardinalToSql() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int index: getCardinals().keySet()) {
+            String num = Utils.getNextNumber(getQuery(), index);
+            stringBuilder.append(num);
+        }
+        return stringBuilder.toString();
+    }
+
     public void generateSqlQuery() {
         String priority = "p.id";
         if (!getCriteria().isEmpty()) {
@@ -183,8 +197,12 @@ public class Request {
         if (!getComparators().isEmpty()) {
             sqlQuery.append(getCategories().isEmpty() ? " WHERE " : " AND ").append(comparatorToSql());
         }
+        sqlQuery.append(" ORDER BY priority DESC");
+        if(!getCardinals().isEmpty()) {
+            sqlQuery.append(" LIMIT ").append(cardinalToSql());
+        }
 
-        setSqlQuery(sqlQuery.append(" ORDER BY priority DESC").toString());
+        setSqlQuery(sqlQuery.toString());
     }
 
     public List<Product> getResults(Connection connection) {
