@@ -97,6 +97,7 @@ public class Request {
         return sqlQuery.toString();
     }
 
+
     public String criteriaToSql() {
         StringBuilder sqlQuery = new StringBuilder();
 
@@ -176,6 +177,11 @@ public class Request {
         for(int index: getCardinals().keySet()) {
             String num = Utils.getNextNumber(getQuery(), index);
             stringBuilder.append(num);
+
+            getClearQuery().append("<span class='badge rounded-pill bg-warning'>")
+                    .append("limit ")
+                    .append(num)
+                    .append("</span>");
         }
         return stringBuilder.toString();
     }
@@ -200,6 +206,12 @@ public class Request {
         sqlQuery.append(" ORDER BY priority DESC");
         if(!getCardinals().isEmpty()) {
             sqlQuery.append(" LIMIT ").append(cardinalToSql());
+        } else if(!getQuery().isEmpty() && Utils.isDouble(getQuery().split(" ")[0])) {
+            sqlQuery.append(" LIMIT ").append(getQuery().split(" ")[0]);
+            getClearQuery().append("<span class='badge rounded-pill bg-warning'>")
+                    .append("limit ")
+                    .append(getQuery().split(" ")[0])
+                    .append("</span>");
         }
 
         setSqlQuery(sqlQuery.toString());

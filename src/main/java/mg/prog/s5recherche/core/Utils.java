@@ -54,6 +54,30 @@ public class Utils {
         return number.toString();
     }
 
+    public static boolean isDouble(String word) {
+        try {
+            Double.parseDouble(word);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static String getPreviousNumber(String string, int indexStart) {
+        StringBuilder number = new StringBuilder();
+        boolean endDigit = false;
+        for (int i = indexStart; i >= 0 ; i--) {
+            if (endDigit) {
+                break;
+            } else if (Character.isDigit(string.charAt(i))) {
+                number.append(string.charAt(i));
+            } else if (!number.isEmpty()) {
+                endDigit = true;
+            }
+        }
+        return number.reverse().toString();
+    }
+
     public static String getNextString(String string, int indexStart) {
         StringBuilder word = new StringBuilder();
         boolean endWord = false;
