@@ -9,7 +9,7 @@ https://github.com/mendrika261/S5-PROG-searchengine/assets/97053149/ff8b3b20-baf
 
 
 # How it works ℹ️
-Keywords are extracted from the query and translated into SQL queries.
+Keywords are extracted from the query, labeled and translated into SQL queries.
 
 ### Example ⤵️
 #### Query:
