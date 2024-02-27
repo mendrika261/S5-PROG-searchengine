@@ -2,6 +2,12 @@
 
 Make search over products using natural language [french only].
 
+
+
+https://github.com/mendrika261/S5-PROG-searchengine/assets/97053149/ff8b3b20-bafe-4d2f-bb89-13bb4ed8c47a
+
+
+
 # How it works ℹ️
 Keywords are extracted from the query and translated into SQL queries.
 
@@ -10,7 +16,7 @@ Keywords are extracted from the query and translated into SQL queries.
 ```
 top 2 meilleur qualité de légumes et fruit supérieure ou égale à 7 avec un prix entre 3000 et 5000
 ```
-#### Keywords extracted:
+#### Keywords extracted: (*key is index of the word in the query)
 ```
 Adjectives: (1)
     {
